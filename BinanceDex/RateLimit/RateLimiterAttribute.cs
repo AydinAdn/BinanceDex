@@ -1,12 +1,4 @@
-﻿/*
- *
- * Kicking this can down the road for now.
- *
- *
- *
- */
-
-using System;
+﻿using System;
 
 namespace BinanceDex.RateLimit
 {

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using BinanceDex.Utilities;
 
 namespace BinanceDex.RateLimit
 {
@@ -22,8 +23,14 @@ namespace BinanceDex.RateLimit
                      });
         }
 
+
         // TODO: Implement async method to retrieve the correct limiter from the dictionary.
 
+        public RateLimitInfo GetRateLimiter(string endpoint)
+        {
+            Throw.IfNullOrWhiteSpace(endpoint, nameof(endpoint));
+            return this.limits[endpoint];
+        }
 
         //public async Task GetLimiter([CallerMemberName] string caller)
 
