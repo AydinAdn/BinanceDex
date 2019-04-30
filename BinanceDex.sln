@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceDex", "BinanceDex\BinanceDex.csproj", "{89C803FA-CAA8-49D0-96BB-B008BCB95716}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceDex.Test", "BinanceDex.Test\BinanceDex.Test.csproj", "{6B3C52C5-7F24-4AFA-9E39-79076F67EB66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceDex.WalletSample", "BinanceDex.WalletSample\BinanceDex.WalletSample.csproj", "{15088A02-C0CA-45E9-A456-44FD8503BF49}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceDex.ApiSample", "BinanceDex.ApiSample\BinanceDex.ApiSample.csproj", "{68FA1DF3-B935-4E6F-A15A-3862AE62D075}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{A167524C-6924-418A-8F55-3A18A0BBDD1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceDex.CandleStickStreamSample", "Binance.CandleStickStreamSample\BinanceDex.CandleStickStreamSample.csproj", "{113E3379-FC23-4AEC-9803-37A1F2647661}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceDex.OrderBookStreamSample", "BinanceDex.OrderBookStreamSample\BinanceDex.OrderBookStreamSample.csproj", "{153C34C7-1F36-499A-9EE8-36FDFABB4172}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89C803FA-CAA8-49D0-96BB-B008BCB95716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89C803FA-CAA8-49D0-96BB-B008BCB95716}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89C803FA-CAA8-49D0-96BB-B008BCB95716}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89C803FA-CAA8-49D0-96BB-B008BCB95716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B3C52C5-7F24-4AFA-9E39-79076F67EB66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B3C52C5-7F24-4AFA-9E39-79076F67EB66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B3C52C5-7F24-4AFA-9E39-79076F67EB66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B3C52C5-7F24-4AFA-9E39-79076F67EB66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15088A02-C0CA-45E9-A456-44FD8503BF49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15088A02-C0CA-45E9-A456-44FD8503BF49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15088A02-C0CA-45E9-A456-44FD8503BF49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15088A02-C0CA-45E9-A456-44FD8503BF49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68FA1DF3-B935-4E6F-A15A-3862AE62D075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68FA1DF3-B935-4E6F-A15A-3862AE62D075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68FA1DF3-B935-4E6F-A15A-3862AE62D075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68FA1DF3-B935-4E6F-A15A-3862AE62D075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{113E3379-FC23-4AEC-9803-37A1F2647661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{113E3379-FC23-4AEC-9803-37A1F2647661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{113E3379-FC23-4AEC-9803-37A1F2647661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{113E3379-FC23-4AEC-9803-37A1F2647661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{153C34C7-1F36-499A-9EE8-36FDFABB4172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{153C34C7-1F36-499A-9EE8-36FDFABB4172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{153C34C7-1F36-499A-9EE8-36FDFABB4172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{153C34C7-1F36-499A-9EE8-36FDFABB4172}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{15088A02-C0CA-45E9-A456-44FD8503BF49} = {A167524C-6924-418A-8F55-3A18A0BBDD1F}
+		{68FA1DF3-B935-4E6F-A15A-3862AE62D075} = {A167524C-6924-418A-8F55-3A18A0BBDD1F}
+		{113E3379-FC23-4AEC-9803-37A1F2647661} = {A167524C-6924-418A-8F55-3A18A0BBDD1F}
+		{153C34C7-1F36-499A-9EE8-36FDFABB4172} = {A167524C-6924-418A-8F55-3A18A0BBDD1F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B30050A-A9C8-4733-8BD8-8A9588C547D9}
+	EndGlobalSection
+EndGlobal

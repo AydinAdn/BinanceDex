@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <Version>0.0.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.10.1" />
+    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BinanceDex\BinanceDex.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ConsoleDump">
+      <HintPath>..\..\..\..\.nuget\packages\consoledump\0.7.0\lib\netstandard2.0\ConsoleDump.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
