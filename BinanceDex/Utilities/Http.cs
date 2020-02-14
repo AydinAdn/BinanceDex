@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BinanceDex.Utilities
 {
@@ -113,5 +114,16 @@ namespace BinanceDex.Utilities
         public int StatusCode { get; set; }
 
         #endregion
+    }
+
+
+    public class JsonHttp : Http
+    {
+        public async Task<T> GetAsync<T>(string uri)
+        {
+            HttpResponse result = await this.GetAsync(uri);
+            return JsonConvert.DeserializeObject<T>(result.Response);
+        }
+
     }
 }

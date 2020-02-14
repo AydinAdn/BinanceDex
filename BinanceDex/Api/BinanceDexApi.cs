@@ -6,15 +6,19 @@ using MessagePack;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using BinanceDex.RateLimit;
 
 namespace BinanceDex.Api
 {
     /// <inheritdoc />
-    public class BinanceDexApi : IBinanceDexApi
+    public class BinanceDexApi : IRateLimiter, IBinanceDexApi
     {
         private readonly IHttp http;
         private readonly string baseUrl;
+        private bool useRateLimiter = true;
+        private IRateLimiter rateLimiterImplementation;
         public string Hrp { get; }
 
 
@@ -24,21 +28,30 @@ namespace BinanceDex.Api
         /// <param name="http">The http object to use</param>
         /// <param name="baseUrl">The base url of the api</param>
         /// <param name="hrp">The `hrp` or `human readable part` associated with the environment (tbnb for testing, bnb for live) </param>
-        public BinanceDexApi(IHttp http, string baseUrl, string hrp)
+        public BinanceDexApi(IHttp http, string baseUrl, string hrp) : this(http,baseUrl, hrp, new RateLimiter<IBinanceDexApi>())
         {
+        }
+
+        public BinanceDexApi(IHttp http, string baseUrl, string hrp, IRateLimiter rateLimiter)
+        {
+
             Throw.IfNull(http, nameof(http));
             Throw.IfNullOrWhiteSpace(baseUrl, nameof(baseUrl));
 
             this.http = http;
             this.baseUrl = baseUrl;
             this.Hrp = hrp;
+            this.rateLimiterImplementation = rateLimiter;
         }
+
 
         public async Task<Times> GetTimeAsync()
         {
             string path = "time";
 
-            HttpResponse result = await this.http.GetAsync(this.baseUrl + path);
+            var limiter = this.GetRateLimiter();
+
+            HttpResponse result  = await limiter.Try(() => this.http.GetAsync(this.baseUrl + path));
 
             return JsonConvert.DeserializeObject<Times>(result.Response);
         }
@@ -91,6 +104,7 @@ namespace BinanceDex.Api
 
             return JsonConvert.DeserializeObject<AccountSequence>(result.Response);
         }
+
 
         public async Task<Transaction> GetTransactionAsync(string transactionId)
         {
@@ -267,6 +281,11 @@ namespace BinanceDex.Api
 
             return JsonConvert.DeserializeObject<TxPage>(result.Response);
 
+        }
+
+        public Limiter GetRateLimiter([CallerMemberName]string endpoint = "")
+        {
+            return this.rateLimiterImplementation.GetRateLimiter(endpoint);
         }
     }
 }

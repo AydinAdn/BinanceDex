@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BinanceDex.Api.Models;
 using BinanceDex.Utilities;
 
@@ -42,8 +40,8 @@ namespace BinanceDex
 
         #region Private Fields
 
-        private readonly SortedDictionary<decimal, OrderBookPriceLevel> _bids;
-        private readonly SortedDictionary<decimal, OrderBookPriceLevel> _asks;
+        private readonly SortedDictionary<decimal, OrderBookPriceLevel> bidOrders;
+        private readonly SortedDictionary<decimal, OrderBookPriceLevel> askOrders;
 
         #endregion Private Fields
 
@@ -72,21 +70,21 @@ namespace BinanceDex
             this.Symbol = symbol;
             this.LastUpdateId = lastUpdateId;
 
-            this._bids = new SortedDictionary<decimal, OrderBookPriceLevel>(new ReverseComparer<decimal>());
-            this._asks = new SortedDictionary<decimal, OrderBookPriceLevel>();
+            this.bidOrders = new SortedDictionary<decimal, OrderBookPriceLevel>(new ReverseComparer<decimal>());
+            this.askOrders = new SortedDictionary<decimal, OrderBookPriceLevel>();
 
             foreach (var bid in bids)
             {
-                this._bids.Add(bid.Item1, new OrderBookPriceLevel(bid.Item1, bid.Item2));
+                this.bidOrders.Add(bid.Item1, new OrderBookPriceLevel(bid.Item1, bid.Item2));
             }
 
             foreach (var ask in asks)
             {
-                this._asks.Add(ask.Item1, new OrderBookPriceLevel(ask.Item1, ask.Item2));
+                this.askOrders.Add(ask.Item1, new OrderBookPriceLevel(ask.Item1, ask.Item2));
             }
 
-            this.Bids = this._bids.Values.ToArray();
-            this.Asks = this._asks.Values.ToArray();
+            this.Bids = this.bidOrders.Values.ToArray();
+            this.Asks = this.askOrders.Values.ToArray();
 
             this.Top = this.Bids.Any() && this.Asks.Any() ? new OrderBookTop(this) : null;
         }
@@ -102,8 +100,8 @@ namespace BinanceDex
         /// <returns>The quantity at price (0 if no entry at price).</returns>
         public decimal Quantity(decimal price)
         {
-            return this._bids.ContainsKey(price) ? this._bids[price].Quantity
-                : this._asks.ContainsKey(price) ? this._asks[price].Quantity : 0;
+            return this.bidOrders.ContainsKey(price) ? this.bidOrders[price].Quantity
+                : this.askOrders.ContainsKey(price) ? this.askOrders[price].Quantity : 0;
         }
 
         /// <summary>
@@ -114,8 +112,8 @@ namespace BinanceDex
         /// <returns>The order book depth up to price.</returns>
         public decimal Depth(decimal price)
         {
-            return this._bids.TakeWhile(_ => _.Key >= price).Sum(_ => _.Value.Quantity)
-                + this._asks.TakeWhile(_ => _.Key <= price).Sum(_ => _.Value.Quantity);
+            return this.bidOrders.TakeWhile(_ => _.Key >= price).Sum(_ => _.Value.Quantity)
+                + this.askOrders.TakeWhile(_ => _.Key <= price).Sum(_ => _.Value.Quantity);
         }
 
         /// <summary>
@@ -126,8 +124,8 @@ namespace BinanceDex
         /// <returns>The order book volume up to price.</returns>
         public decimal Volume(decimal price)
         {
-            return this._bids.TakeWhile(_ => _.Key >= price).Sum(_ => _.Value.Price * _.Value.Quantity)
-                + this._asks.TakeWhile(_ => _.Key <= price).Sum(_ => _.Value.Price * _.Value.Quantity);
+            return this.bidOrders.TakeWhile(_ => _.Key >= price).Sum(_ => _.Value.Price * _.Value.Quantity)
+                + this.askOrders.TakeWhile(_ => _.Key <= price).Sum(_ => _.Value.Price * _.Value.Quantity);
         }
 
         #endregion Public Methods
@@ -145,7 +143,7 @@ namespace BinanceDex
         /// <param name="lastUpdateId"></param>
         /// <param name="bids"></param>
         /// <param name="asks"></param>
-        internal void Modify(long lastUpdateId, IEnumerable<(decimal, decimal)> bids, IEnumerable<(decimal, decimal)> asks)
+        private void Modify(long lastUpdateId, IEnumerable<(decimal, decimal)> bids, IEnumerable<(decimal, decimal)> asks)
         {
             if (lastUpdateId <= this.LastUpdateId)
                 throw new ArgumentException($"{nameof(OrderBook)}.{nameof(this.Modify)}: new ID must be greater than previous ID.");
@@ -156,13 +154,13 @@ namespace BinanceDex
                 // If quantity is > 0, then set the quantity.
                 if (bid.Item2 > 0)
                 {
-                    if (this._bids.ContainsKey(bid.Item1))
-                        this._bids[bid.Item1].Quantity = bid.Item2;
+                    if (this.bidOrders.ContainsKey(bid.Item1))
+                        this.bidOrders[bid.Item1].Quantity = bid.Item2;
                     else
-                        this._bids[bid.Item1] = new OrderBookPriceLevel(bid.Item1, bid.Item2);
+                        this.bidOrders[bid.Item1] = new OrderBookPriceLevel(bid.Item1, bid.Item2);
                 }
                 else // otherwise, remove the price level.
-                    this._bids.Remove(bid.Item1);
+                    this.bidOrders.Remove(bid.Item1);
             }
 
             // Update order book asks.
@@ -171,17 +169,17 @@ namespace BinanceDex
                 // If quantity is > 0, then set the quantity.
                 if (ask.Item2 > 0)
                 {
-                    if (this._asks.ContainsKey(ask.Item1))
-                        this._asks[ask.Item1].Quantity = ask.Item2;
+                    if (this.askOrders.ContainsKey(ask.Item1))
+                        this.askOrders[ask.Item1].Quantity = ask.Item2;
                     else
-                        this._asks[ask.Item1] = new OrderBookPriceLevel(ask.Item1, ask.Item2);
+                        this.askOrders[ask.Item1] = new OrderBookPriceLevel(ask.Item1, ask.Item2);
                 }
                 else // otherwise, remove the price level.
-                    this._asks.Remove(ask.Item1);
+                    this.askOrders.Remove(ask.Item1);
             }
 
-            this.Bids = this._bids.Values.ToArray();
-            this.Asks = this._asks.Values.ToArray();
+            this.Bids = this.bidOrders.Values.ToArray();
+            this.Asks = this.askOrders.Values.ToArray();
 
             this.Top = this.Bids.Any() && this.Asks.Any() ? new OrderBookTop(this) : null;
 
@@ -199,7 +197,7 @@ namespace BinanceDex
         /// <returns></returns>
         public OrderBook Clone()
         {
-            return new OrderBook(this.Symbol, this.LastUpdateId, this._bids.Select(_ => (_.Key, _.Value.Quantity)), this._asks.Select(_ => (_.Key, _.Value.Quantity)));
+            return new OrderBook(this.Symbol, this.LastUpdateId, this.bidOrders.Select(_ => (_.Key, _.Value.Quantity)), this.askOrders.Select(_ => (_.Key, _.Value.Quantity)));
         }
 
         /// <summary>
@@ -210,7 +208,7 @@ namespace BinanceDex
         {
             if (limit <= 0) throw new ArgumentOutOfRangeException(nameof(limit));
 
-            return new OrderBook(this.Symbol, this.LastUpdateId, this._bids.Take(limit).Select(_ => (_.Key, _.Value.Quantity)), this._asks.Take(limit).Select(_ => (_.Key, _.Value.Quantity)));
+            return new OrderBook(this.Symbol, this.LastUpdateId, this.bidOrders.Take(limit).Select(_ => (_.Key, _.Value.Quantity)), this.askOrders.Take(limit).Select(_ => (_.Key, _.Value.Quantity)));
         }
 
         /// <summary>
@@ -246,6 +244,7 @@ namespace BinanceDex
         {
             public int Compare(T x, T y)
             {
+                if (y == null) throw new ArgumentNullException(nameof(y));
                 return y.CompareTo(x);
             }
         }

@@ -13,7 +13,7 @@ namespace BinanceDex.Api.Models
         public string ConsensusVersion { get; set; }
 
         [JsonProperty("p2p_version")]
-        public string P2pVersion { get; set; }
+        public string P2PVersion { get; set; }
 
         [JsonProperty("rpc_address")]
         public string RpcAddress { get; set; }

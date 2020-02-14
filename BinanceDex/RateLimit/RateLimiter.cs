@@ -2,37 +2,39 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using BinanceDex.Utilities;
 
 namespace BinanceDex.RateLimit
 {
-    public class RateLimiter<T>
+    public interface IRateLimiter
     {
-        private ConcurrentDictionary<string, RateLimitInfo> limits;
+        Limiter GetRateLimiter([CallerMemberName] string endpoint = "");
+    }
+
+    public class RateLimiter<T> : IRateLimiter
+    {
+        private ConcurrentDictionary<string, Limiter> limits;
 
         public RateLimiter()
         {
-            this.limits = new ConcurrentDictionary<string, RateLimitInfo>();
+            this.limits = new ConcurrentDictionary<string, Limiter>();
 
             typeof(T).GetMethods()
                      .Select(x => new { Name = x.Name, Limit = x.GetCustomAttribute<RateLimiterAttribute>() })
+                     .Where(x=>x.Name.Contains("Hrp") == false)
                      .ToList()
                      .ForEach(x =>
                      {
-                         this.limits.GetOrAdd(x.Name, new RateLimitInfo(x.Limit.Rate, TimeSpan.FromSeconds(x.Limit.PerTimeInSeconds)));
+                         this.limits.GetOrAdd(x.Name, new Limiter(x.Limit.Rate, TimeSpan.FromSeconds(x.Limit.PerTimeInSeconds)));
                      });
         }
 
 
-        // TODO: Implement async method to retrieve the correct limiter from the dictionary.
-
-        public RateLimitInfo GetRateLimiter(string endpoint)
+        public Limiter GetRateLimiter([CallerMemberName] string endpoint = "")
         {
-            Throw.IfNullOrWhiteSpace(endpoint, nameof(endpoint));
+            Throw.IfNull(endpoint, nameof(endpoint));
             return this.limits[endpoint];
         }
-
-        //public async Task GetLimiter([CallerMemberName] string caller)
-
     }
 }
