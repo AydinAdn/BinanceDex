@@ -14,7 +14,7 @@ namespace BinanceDex.WalletSample
 {
     static class Program
     {
-        static async Task Main(string[] args)
+        static async Task Main()
         {
 
             IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
@@ -37,8 +37,8 @@ namespace BinanceDex.WalletSample
 
             // Create a wallet
             {
-                IWalletProviderResult<Wallet.WalletInfo> walletProviderResult = await walletProvider.CreateWalletAsync(walletName, walletPassword, walletPassword);
-                Wallet.WalletInfo walletInfo = walletProviderResult.Result;
+                IWalletProviderResult<WalletInfo> walletProviderResult = await walletProvider.CreateWalletAsync(walletName, walletPassword, walletPassword);
+                WalletInfo walletInfo = walletProviderResult.Result;
                 walletInfo.Dump("Create a wallet"); // `.Dump`  >>>> Prints to console
             }
 
@@ -50,8 +50,8 @@ namespace BinanceDex.WalletSample
 
             // GetAsync all wallets
             {
-                IWalletProviderResult<IEnumerable<Wallet.WalletInfo>> walletProviderResult = await walletProvider.GetAllWalletsAsync();
-                IEnumerable<Wallet.WalletInfo> wallets = walletProviderResult.Result;
+                IWalletProviderResult<IEnumerable<WalletInfo>> walletProviderResult = await walletProvider.GetAllWalletsAsync();
+                IEnumerable<WalletInfo> wallets = walletProviderResult.Result;
                 wallets.Dump("GetAsync all wallets");
             }
 
@@ -63,15 +63,15 @@ namespace BinanceDex.WalletSample
 
             // Import wallet
             {
-                IWalletProviderResult<Wallet.WalletInfo> walletProviderResult = await walletProvider.ImportWalletAsync(walletName, walletPassword, walletPassword, walletRecoverySeed);
-                Wallet.WalletInfo walletInfo = walletProviderResult.Result;
+                IWalletProviderResult<WalletInfo> walletProviderResult = await walletProvider.ImportWalletAsync(walletName, walletPassword, walletPassword, walletRecoverySeed);
+                WalletInfo walletInfo = walletProviderResult.Result;
                 walletInfo.Dump("Import wallet");
             }
 
             // Find an individual wallet
             {
-                IWalletProviderResult<Wallet.WalletInfo> walletProviderResult = await walletProvider.FindWalletAsync(walletName);
-                Wallet.WalletInfo walletInfo = walletProviderResult.Result;
+                IWalletProviderResult<WalletInfo> walletProviderResult = await walletProvider.FindWalletAsync(walletName);
+                WalletInfo walletInfo = walletProviderResult.Result;
                 walletInfo.Dump("Finding an individual wallet");
             }
 

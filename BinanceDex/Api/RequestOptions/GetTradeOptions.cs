@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BinanceDex.Api.RequestOptions
+﻿namespace BinanceDex.Api.RequestOptions
 {
     public class GetTradeOptions : OptionsBase
     {

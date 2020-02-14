@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace BinanceDex.Utilities
 
                 using (HttpWebResponse response = (HttpWebResponse) await request.GetResponseAsync())
                 using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                using (StreamReader reader = new StreamReader(stream ?? throw new InvalidOperationException()))
                 {
                     return new HttpResponse
                     {
@@ -46,7 +47,7 @@ namespace BinanceDex.Utilities
             {
                 using (HttpWebResponse response = (HttpWebResponse) e.Response)
                 using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                using (StreamReader reader = new StreamReader(stream ?? throw new InvalidOperationException()))
                 {
                     return new HttpResponse
                     {
@@ -79,7 +80,7 @@ namespace BinanceDex.Utilities
 
                 using (HttpWebResponse response = (HttpWebResponse) await request.GetResponseAsync())
                 using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                using (StreamReader reader = new StreamReader(stream ?? throw new InvalidOperationException()))
                 {
                     return new HttpResponse
                     {
@@ -92,7 +93,7 @@ namespace BinanceDex.Utilities
             {
                 using (HttpWebResponse response = (HttpWebResponse) e.Response)
                 using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                using (StreamReader reader = new StreamReader(stream ?? throw new InvalidOperationException()))
                 {
                     return new HttpResponse
                     {

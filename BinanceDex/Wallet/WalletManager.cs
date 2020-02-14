@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,7 +6,6 @@ using System.Text;
 using System.Numerics;
 using System.Threading.Tasks;
 using BinanceDex.Api;
-using BinanceDex.Api.Models;
 using BinanceDex.Utilities;
 using BinanceDex.Utilities.Extensions;
 using Google.Protobuf;
@@ -354,8 +352,8 @@ namespace BinanceDex.Wallet
         {
             Mnemonic mnemonic = new Mnemonic(mnenonicWords, Wordlist.English);
 
-            var key = new ExtKey(mnemonic.DeriveSeed(password));
-            var extKey = key.Derive(new KeyPath("m/44'/714'/0'/0/0"));
+            ExtKey key = new ExtKey(mnemonic.DeriveSeed(password));
+            ExtKey extKey = key.Derive(new KeyPath("m/44'/714'/0'/0/0"));
 
             Key privateKey = extKey.PrivateKey;
             PubKey publicKey = privateKey.PubKey;

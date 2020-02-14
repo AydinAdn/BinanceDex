@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using BinanceDex.Api;
@@ -16,7 +15,7 @@ namespace BinanceDex.ApiSample
 {
     static class Program
     {
-        static async Task Main(string[] args)
+        static async Task Main()
         {
             IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
                                                                          .AddJsonFile("appsettings.json", true, false)

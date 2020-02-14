@@ -6,7 +6,7 @@ namespace BinanceDex.Utilities.Logging
     {
         #region Fields
 
-        private readonly ILogger _fileLogger;
+        private readonly ILogger fileLogger;
 
         #endregion
 
@@ -14,7 +14,7 @@ namespace BinanceDex.Utilities.Logging
 
         public FileLoggerProvider(string filePath, LogLevel level)
         {
-            this._fileLogger = new FileLogger(filePath, level);
+            this.fileLogger = new FileLogger(filePath, level);
         }
 
         #endregion
@@ -27,7 +27,7 @@ namespace BinanceDex.Utilities.Logging
 
         public ILogger CreateLogger(string categoryName)
         {
-            return this._fileLogger;
+            return this.fileLogger;
         }
 
         #endregion

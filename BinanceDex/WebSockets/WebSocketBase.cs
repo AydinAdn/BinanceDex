@@ -9,8 +9,7 @@ namespace BinanceDex.WebSockets
 {
     public class WebSocketBase : IDisposable
     {
-        private readonly string baseUrl;
-        protected readonly WebSocket webSocket;
+        protected readonly WebSocket WebSocket;
         private readonly bool keepConnected;
         private readonly CancellationTokenSource cts;
 
@@ -22,29 +21,24 @@ namespace BinanceDex.WebSockets
 
         protected WebSocketBase(string baseUrl)
         {
-            this.baseUrl = baseUrl;
-            this.webSocket = new WebSocket(baseUrl);
-            this.webSocket.EmitOnPing = true;
+            this.WebSocket = new WebSocket(baseUrl) {EmitOnPing = true};
         }
 
-        private Task KeepAlive(CancellationToken token)
+        private Task KeepAlive(CancellationToken token) => Task.Run(async () =>
         {
-            return Task.Run(async () =>
+            await Task.Delay(TimeSpan.FromMinutes(25), token);
+            if (this.WebSocket.IsAlive)
             {
-                await Task.Delay(TimeSpan.FromMinutes(25), token);
-                if (this.webSocket.IsAlive)
-                {
-                    this.Send(@"{ ""method"": ""keepAlive"" }");
-                    this.KeepAlive(token);
-                }
-            }, token);
-        }
+                this.Send(@"{ ""method"": ""keepAlive"" }");
+                await this.KeepAlive(token);
+            }
+        }, token);
 
         public void Connect()
         {
-            if (this.webSocket.IsAlive) return;
+            if (this.WebSocket.IsAlive) return;
 
-            this.webSocket.Connect();
+            this.WebSocket.Connect();
             if (this.keepConnected)
             {
                 this.KeepAlive(this.cts.Token);
@@ -53,14 +47,14 @@ namespace BinanceDex.WebSockets
 
         protected void Send(string data)
         {
-            this.webSocket.Send(data);
+            this.WebSocket.Send(data);
         }
 
 
         public void Dispose()
         {
             this.Send(@"{""method"": ""close""}");
-            ((IDisposable) this.webSocket)?.Dispose();
+            ((IDisposable) this.WebSocket)?.Dispose();
             this.cts?.Dispose();
         }
     }

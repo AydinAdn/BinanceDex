@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using BinanceDex.Api.Models;
 using BinanceDex.Api.RequestOptions;
 using BinanceDex.RateLimit;
-using NBitcoin;
 using Transaction = BinanceDex.Api.Models.Transaction;
 
 namespace BinanceDex.Api
@@ -96,11 +94,6 @@ namespace BinanceDex.Api
         /// <summary>
         ///      Gets candlestick/kline bars for a symbol. Bars are uniquely identified by their open time.
         /// </summary>
-        /// <param name="symbol">Symbol</param>
-        /// <param name="interval">Interval</param>
-        /// <param name="limit">Result limit</param>
-        /// <param name="startTime">Start time, meaning show results starting from this date/time</param>
-        /// <param name="endTime">End time, meaning show results ending on this date/time</param>
         [RateLimiter(Rate = 10, PerTimeInSeconds = 1)]
         Task<IEnumerable<CandleStick>> GetCandleSticksAsync(GetCandleStickOptions candleStickOptions);
 

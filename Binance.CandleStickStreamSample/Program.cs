@@ -15,14 +15,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
 
-namespace Binance.CandleStickStreamSample
+namespace BinanceDex.CandleStickStreamSample
 {
     public class Program
     {
         private static long _height;
         private static object _locker;
 
-        static async Task Main(string[] args)
+        static async Task Main()
         {
             await SingleStream();
 

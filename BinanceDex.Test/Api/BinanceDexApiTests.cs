@@ -3,10 +3,12 @@ using BinanceDex.Utilities;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BinanceDex.Api.Models;
 using ConsoleDump;
 using Newtonsoft.Json;
+using Times = BinanceDex.Api.Models.Times;
 
 namespace BinanceDex.Test.Api
 {
@@ -54,14 +56,14 @@ namespace BinanceDex.Test.Api
         public async Task GetTimeAsync_SendingRequest_ReturnsTime()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
-            var apTime = DateTime.Parse("2019-04-24T10:28:27Z").ToUniversalTime();
-            var blockTime = "2019-04-24T10:28:26Z";
-            var code = 0;
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
+            DateTime apTime = DateTime.Parse("2019-04-24T10:28:27Z").ToUniversalTime();
+            string blockTime = "2019-04-24T10:28:26Z";
+            int code = 0;
             string message = null;
 
             // Act
-            var result = await unitUnderTest.GetTimeAsync();
+            Times result = await unitUnderTest.GetTimeAsync();
 
             // Assert
             Assert.That(result.ApTime == apTime);
@@ -74,12 +76,12 @@ namespace BinanceDex.Test.Api
         public async Task GetNodeInfoAsync_SendingRequest_ReturnsNodeInfo()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
-            var json = @"{""node_info"":{""id"":""c4d94f29e765ecfe81c940e11c2e997321aa8e0f"",""listen_addr"":""10.203.43.118:27146"",""network"":""Binance-Chain-Nile"",""version"":""0.30.1"",""channels"":""3540202122233038"",""moniker"":""Zugspitze"",""other"":{""amino_version"":"""",""p2p_version"":"""",""consensus_version"":"""",""rpc_version"":"""",""tx_index"":""on"",""rpc_address"":""tcp://0.0.0.0:27147""}},""sync_info"":{""latest_block_hash"":""DC18585214F618159722EEEB51C5973800705A490A4D2EB2F48413EF2B90ED6D"",""latest_app_hash"":""39DB053E04AA1683F9ED832C4EDE65CC35D38BB44E53303ED919F1BFC0C7F08C"",""latest_block_height"":10385258,""latest_block_time"":""2019-04-24T11:02:12.664627443Z"",""catching_up"":false},""validator_info"":{""address"":""91844D296BD8E591448EFC65FD6AD51A888D58FA"",""pub_key"":[200,14,154,190,247,255,67,156,16,198,143,232,241,48,61,237,223,197,39,113,140,59,55,216,186,104,7,68,110,60,130,122],""voting_power"":100000000000}}";
-            var node = JsonConvert.DeserializeObject<Node>(json);
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
+            string json = @"{""node_info"":{""id"":""c4d94f29e765ecfe81c940e11c2e997321aa8e0f"",""listen_addr"":""10.203.43.118:27146"",""network"":""Binance-Chain-Nile"",""version"":""0.30.1"",""channels"":""3540202122233038"",""moniker"":""Zugspitze"",""other"":{""amino_version"":"""",""p2p_version"":"""",""consensus_version"":"""",""rpc_version"":"""",""tx_index"":""on"",""rpc_address"":""tcp://0.0.0.0:27147""}},""sync_info"":{""latest_block_hash"":""DC18585214F618159722EEEB51C5973800705A490A4D2EB2F48413EF2B90ED6D"",""latest_app_hash"":""39DB053E04AA1683F9ED832C4EDE65CC35D38BB44E53303ED919F1BFC0C7F08C"",""latest_block_height"":10385258,""latest_block_time"":""2019-04-24T11:02:12.664627443Z"",""catching_up"":false},""validator_info"":{""address"":""91844D296BD8E591448EFC65FD6AD51A888D58FA"",""pub_key"":[200,14,154,190,247,255,67,156,16,198,143,232,241,48,61,237,223,197,39,113,140,59,55,216,186,104,7,68,110,60,130,122],""voting_power"":100000000000}}";
+            Node node = JsonConvert.DeserializeObject<Node>(json);
 
             // Act
-            var result = await unitUnderTest.GetNodeInfoAsync();
+            Node result = await unitUnderTest.GetNodeInfoAsync();
 
             // Assert
             Assert.That(node.NodeInfo.Id == result.NodeInfo.Id);
@@ -94,10 +96,10 @@ namespace BinanceDex.Test.Api
         public async Task GetValidatorsAsync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
 
             // Act
-            var result = await unitUnderTest.GetValidatorsAsync();
+            Validators result = await unitUnderTest.GetValidatorsAsync();
 
             // Assert
             result.ValidatorCollection.Dump();
@@ -108,10 +110,10 @@ namespace BinanceDex.Test.Api
         public async Task GetPeersAsync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
 
             // Act
-            var result = await unitUnderTest.GetPeersAsync();
+            IEnumerable<Peer> result = await unitUnderTest.GetPeersAsync();
 
             // Assert
             Assert.Fail();
@@ -121,11 +123,11 @@ namespace BinanceDex.Test.Api
         public async Task GetAccountAsync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
             string address = "";//TODO;
 
             // Act
-            var result = await unitUnderTest.GetAccountAsync(
+            Account result = await unitUnderTest.GetAccountAsync(
                 address);
 
             // Assert
@@ -136,11 +138,11 @@ namespace BinanceDex.Test.Api
         public async Task GetAccountSequenceAsync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
             string address = "";//TODO;
 
             // Act
-            var result = await unitUnderTest.GetAccountSequenceAsync(
+            AccountSequence result = await unitUnderTest.GetAccountSequenceAsync(
                 address);
 
             // Assert
@@ -151,11 +153,11 @@ namespace BinanceDex.Test.Api
         public async Task GetTransactionAsync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
             string transactionId = "";//TODO;
 
             // Act
-            var result = await unitUnderTest.GetTransactionAsync(
+            Transaction result = await unitUnderTest.GetTransactionAsync(
                 transactionId);
 
             // Assert
@@ -166,12 +168,12 @@ namespace BinanceDex.Test.Api
         public async Task GetTokensAsync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
             int limit = 500;
             int offset = 0;
 
             // Act
-            var result = await unitUnderTest.GetTokensAsync(
+            IEnumerable<Token> result = await unitUnderTest.GetTokensAsync(
                 limit,
                 offset);
 
@@ -183,12 +185,12 @@ namespace BinanceDex.Test.Api
         public async Task GetMarketPairsAsync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var unitUnderTest = this.CreateBinanceDexApi();
+            BinanceDexApi unitUnderTest = this.CreateBinanceDexApi();
             int limit = 500;
             int offset = 0;
 
             // Act
-            var result = await unitUnderTest.GetMarketPairsAsync(
+            MarketPairs result = await unitUnderTest.GetMarketPairsAsync(
                 limit,
                 offset);
 

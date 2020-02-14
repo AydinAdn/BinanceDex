@@ -16,9 +16,9 @@ namespace BinanceDex.WebSockets
         public CandleStickWebSocket(string baseUrl, bool keepConnected) : base(baseUrl, keepConnected)
         {
             this.symbolsSubscribedTo = new Dictionary<CandleStickInterval, List<string>>();
-            this.webSocket.OnMessage += this.WebSocket_OnMessage;
-            this.webSocket.OnOpen += (o, e) => this.OnConnect?.Invoke(this, null);
-            this.webSocket.OnClose += (o, e) => this.OnDisconnect?.Invoke(this, null);
+            this.WebSocket.OnMessage += this.WebSocket_OnMessage;
+            this.WebSocket.OnOpen += (o, e) => this.OnConnect?.Invoke(this, null);
+            this.WebSocket.OnClose += (o, e) => this.OnDisconnect?.Invoke(this, null);
         }
 
         public CandleStickWebSocket(string baseUrl) : this(baseUrl, false)
@@ -63,7 +63,7 @@ namespace BinanceDex.WebSockets
                 }
             }
 
-            this.webSocket.Send(JsonConvert.SerializeObject(subOptions));
+            this.WebSocket.Send(JsonConvert.SerializeObject(subOptions));
         }
 
         public void Subscribe(string symbol, CandleStickInterval interval)
@@ -87,12 +87,12 @@ namespace BinanceDex.WebSockets
 
             this.symbolsSubscribedTo[interval].RemoveAll(x => subOptions.Symbols.Contains(x));
 
-            this.webSocket.Send(JsonConvert.SerializeObject(subOptions));
+            this.WebSocket.Send(JsonConvert.SerializeObject(subOptions));
         }
 
         public void UnsubscribeAll()
         {
-            foreach (var pair in this.symbolsSubscribedTo)
+            foreach (KeyValuePair<CandleStickInterval, List<string>> pair in this.symbolsSubscribedTo)
             {
                 this.Unsubscribe(pair.Value, pair.Key);
             }
@@ -103,7 +103,7 @@ namespace BinanceDex.WebSockets
         public void Close()
         {
             this.UnsubscribeAll();
-            this.webSocket.Close();
+            this.WebSocket.Close();
         }
     }
 
@@ -116,9 +116,9 @@ namespace BinanceDex.WebSockets
         public MarketDiffWebSocket(string baseUrl, bool keepConnected) : base(baseUrl, keepConnected)
         {
             this.symbolsSubscribedTo = new List<string>();
-            this.webSocket.OnMessage += this.WebSocket_OnMessage;
-            this.webSocket.OnOpen += (o, e) => this.OnConnect?.Invoke(this, null);
-            this.webSocket.OnClose += (o, e) => this.OnDisconnect?.Invoke(this, null);
+            this.WebSocket.OnMessage += this.WebSocket_OnMessage;
+            this.WebSocket.OnOpen += (o, e) => this.OnConnect?.Invoke(this, null);
+            this.WebSocket.OnClose += (o, e) => this.OnDisconnect?.Invoke(this, null);
         }
 
         public MarketDiffWebSocket(string baseUrl) : this(baseUrl, false)
@@ -158,7 +158,7 @@ namespace BinanceDex.WebSockets
                 Symbols = symbols
             };
 
-            this.webSocket.Send(JsonConvert.SerializeObject(subOptions));
+            this.WebSocket.Send(JsonConvert.SerializeObject(subOptions));
         }
 
         public void Subscribe(string symbol)
@@ -182,12 +182,12 @@ namespace BinanceDex.WebSockets
 
             this.symbolsSubscribedTo.RemoveAll(symbols.Contains);
 
-            this.webSocket.Send(JsonConvert.SerializeObject(subOptions));
+            this.WebSocket.Send(JsonConvert.SerializeObject(subOptions));
         }
 
         public void UnsubscribeAll()
         {
-            foreach (var symbol in this.symbolsSubscribedTo)
+            foreach (string symbol in this.symbolsSubscribedTo)
             {
                 this.Unsubscribe(symbol);
             }
@@ -198,7 +198,7 @@ namespace BinanceDex.WebSockets
         public void Close()
         {
             this.UnsubscribeAll();
-            this.webSocket.Close();
+            this.WebSocket.Close();
         }
     }
 
@@ -209,9 +209,9 @@ namespace BinanceDex.WebSockets
         public TradesWebSocket(string baseUrl, bool keepConnected) : base(baseUrl, keepConnected)
         {
             this.symbolsSubscribedTo = new List<string>();
-            this.webSocket.OnMessage += this.WebSocket_OnMessage;
-            this.webSocket.OnOpen += (o, e) => this.OnConnect?.Invoke(this, null);
-            this.webSocket.OnClose += (o, e) => this.OnDisconnect?.Invoke(this, null);
+            this.WebSocket.OnMessage += this.WebSocket_OnMessage;
+            this.WebSocket.OnOpen += (o, e) => this.OnConnect?.Invoke(this, null);
+            this.WebSocket.OnClose += (o, e) => this.OnDisconnect?.Invoke(this, null);
         }
 
         public TradesWebSocket(string baseUrl) : this(baseUrl, false)
@@ -247,7 +247,7 @@ namespace BinanceDex.WebSockets
                 Symbols = symbols
             };
 
-            this.webSocket.Send(JsonConvert.SerializeObject(subOptions));
+            this.WebSocket.Send(JsonConvert.SerializeObject(subOptions));
         }
 
         public void Subscribe(string symbol)
@@ -271,12 +271,12 @@ namespace BinanceDex.WebSockets
 
             this.symbolsSubscribedTo.RemoveAll(symbols.Contains);
 
-            this.webSocket.Send(JsonConvert.SerializeObject(subOptions));
+            this.WebSocket.Send(JsonConvert.SerializeObject(subOptions));
         }
 
         public void UnsubscribeAll()
         {
-            foreach (var symbol in this.symbolsSubscribedTo)
+            foreach (string symbol in this.symbolsSubscribedTo)
             {
                 this.Unsubscribe(symbol);
             }
@@ -287,7 +287,7 @@ namespace BinanceDex.WebSockets
         public void Close()
         {
             this.UnsubscribeAll();
-            this.webSocket.Close();
+            this.WebSocket.Close();
         }
     }
 }

@@ -14,14 +14,14 @@ namespace BinanceDex.RateLimit
 
     public class RateLimiter<T> : IRateLimiter
     {
-        private ConcurrentDictionary<string, Limiter> limits;
+        private readonly ConcurrentDictionary<string, Limiter> limits;
 
         public RateLimiter()
         {
             this.limits = new ConcurrentDictionary<string, Limiter>();
 
             typeof(T).GetMethods()
-                     .Select(x => new { Name = x.Name, Limit = x.GetCustomAttribute<RateLimiterAttribute>() })
+                     .Select(x => new { x.Name, Limit = x.GetCustomAttribute<RateLimiterAttribute>() })
                      .Where(x=>x.Name.Contains("Hrp") == false)
                      .ToList()
                      .ForEach(x =>

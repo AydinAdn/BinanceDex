@@ -14,11 +14,11 @@ namespace BinanceDex.Utilities.Logging
 
         #endregion Private Constants
 
-        private readonly string _filePath;
+        private readonly string filePath;
 
-        private readonly LogLevel _level;
+        private readonly LogLevel level;
 
-        private readonly object _sync = new object();
+        private readonly object sync = new object();
 
         #endregion
 
@@ -29,8 +29,8 @@ namespace BinanceDex.Utilities.Logging
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
 
-            this._filePath = filePath;
-            this._level = level;
+            this.filePath = filePath;
+            this.level = level;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace BinanceDex.Utilities.Logging
             if (logLevel == LogLevel.None)
                 return false;
 
-            return logLevel >= this._level;
+            return logLevel >= this.level;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
@@ -65,9 +65,9 @@ namespace BinanceDex.Utilities.Logging
 
             try
             {
-                lock (this._sync)
+                lock (this.sync)
                 {
-                    using (FileStream stream = new FileStream(this._filePath, FileMode.Append, FileAccess.Write,
+                    using (FileStream stream = new FileStream(this.filePath, FileMode.Append, FileAccess.Write,
                         FileShare.None))
                     using (StreamWriter streamWriter = new StreamWriter(stream) {AutoFlush = false})
                     {

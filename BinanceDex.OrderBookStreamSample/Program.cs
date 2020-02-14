@@ -12,8 +12,9 @@ namespace BinanceDex.OrderBookStreamSample
 {
     class Program
     {
-        public static object locker= new object();
-        static async Task Main(string[] args)
+        public static readonly object locker = new object();
+
+        static async Task Main()
         {
             BinanceDexApi binanceDexApi = new BinanceDexApi(new Http(), "https://testnet-dex.binance.org/api/v1/", "tbnb");
 

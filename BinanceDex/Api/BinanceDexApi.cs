@@ -12,13 +12,12 @@ using BinanceDex.RateLimit;
 
 namespace BinanceDex.Api
 {
-    /// <inheritdoc />
     public class BinanceDexApi : IRateLimiter, IBinanceDexApi
     {
         private readonly IHttp http;
         private readonly string baseUrl;
         private bool useRateLimiter = true;
-        private IRateLimiter rateLimiterImplementation;
+        private readonly IRateLimiter rateLimiterImplementation;
         public string Hrp { get; }
 
 
@@ -49,7 +48,7 @@ namespace BinanceDex.Api
         {
             string path = "time";
 
-            var limiter = this.GetRateLimiter();
+            Limiter limiter = this.GetRateLimiter();
 
             HttpResponse result  = await limiter.Try(() => this.http.GetAsync(this.baseUrl + path));
 
@@ -144,7 +143,7 @@ namespace BinanceDex.Api
 
             if (result.StatusCode == 200)
             {
-                var markets =  JsonConvert.DeserializeObject<IList<Market>>(result.Response);
+                IList<Market> markets =  JsonConvert.DeserializeObject<IList<Market>>(result.Response);
                 return new MarketPairs{Markets = markets};
             }
 
@@ -177,7 +176,7 @@ namespace BinanceDex.Api
 
             HttpResponse result = await this.http.GetAsync(this.baseUrl + path);
 
-            return JsonConvert.DeserializeObject<MarketDepth>(result.Response, new JsonSerializerSettings{});
+            return JsonConvert.DeserializeObject<MarketDepth>(result.Response, new JsonSerializerSettings());
         }
 
         public async Task<IEnumerable<CandleStick>> GetCandleSticksAsync(GetCandleStickOptions candleStickOptions)
@@ -194,7 +193,7 @@ namespace BinanceDex.Api
 
             HttpResponse result = await this.http.GetAsync(this.baseUrl + path);
 
-            byte[] bytes = MessagePackSerializer.FromJson(result.Response);
+            byte[] bytes = MessagePackSerializer.ConvertFromJson(result.Response);
             return  MessagePackSerializer.Deserialize<CandleStick[]>(bytes);
         }
 
@@ -267,7 +266,7 @@ namespace BinanceDex.Api
             string path = "block-exchange-fee";
             path += options.ToString();
 
-            var result = await this.http.GetAsync(this.baseUrl + path);
+            HttpResponse result = await this.http.GetAsync(this.baseUrl + path);
 
             return JsonConvert.DeserializeObject<BlockExchangeFeePage>(result.Response);
         }
@@ -277,7 +276,7 @@ namespace BinanceDex.Api
             string path = "transactions";
             path += options.ToString();
 
-            var result = await this.http.GetAsync(this.baseUrl + path);
+            HttpResponse result = await this.http.GetAsync(this.baseUrl + path);
 
             return JsonConvert.DeserializeObject<TxPage>(result.Response);
 

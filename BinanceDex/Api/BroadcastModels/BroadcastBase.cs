@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using BinanceDex.Utilities.Extensions;
 using BinanceDex.Wallet;
 using Newtonsoft.Json;
@@ -124,7 +123,7 @@ namespace BinanceDex.Api.BroadcastModels
 
         public byte[] EncodeMessage<T>(T message, byte[] prefix) where T : class
         {
-            return EncodeUtils.AminoWrap(this.ProtoSerialize<T>(message), prefix, false);
+            return EncodeUtils.AminoWrap(this.ProtoSerialize(message), prefix, false);
         }
 
         private byte[] ProtoSerialize<T>(T record) where T : class
@@ -132,7 +131,7 @@ namespace BinanceDex.Api.BroadcastModels
             if (record == null)
                 return null;
 
-            using (var stream = new MemoryStream())
+            using (MemoryStream stream = new MemoryStream())
             {
                 Serializer.Serialize(stream, record);
                 return stream.ToArray();
@@ -144,7 +143,7 @@ namespace BinanceDex.Api.BroadcastModels
             if (data == null)
                 return null;
 
-            using (var stream = new MemoryStream(data))
+            using (MemoryStream stream = new MemoryStream(data))
             {
                 return Serializer.Deserialize<T>(stream);
             }
